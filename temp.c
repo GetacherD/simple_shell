@@ -140,7 +140,6 @@ int cd(char **argv, int *exit_status, int *env_last_state, int *index,
 }
 /**
 * exec_builtin - execute builtin fucntion if any
-* @cmd: command line input
 * @argv: total arg vector
 * @exit_status: set exit status
 * @env_last_state: sete or get last stat
@@ -179,7 +178,6 @@ int exec_builtin(char **argv, int *exit_status,
 * init_exec - initial execution condition /executions
 * @c:program execution counter
 * @n: program name
-* @cmd: command line string
 * @argv: total arg vector
 * @exit_status: set exit status
 * @env_last_state: sete or get last stat
