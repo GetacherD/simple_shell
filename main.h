@@ -1,5 +1,5 @@
-#ifndef MANI_H
-#define MAIN_H
+#ifndef _MAIN_H_
+#define _MAIN_H_
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -133,4 +133,4 @@ void help_unsetenv(void);
 void help_history(void);
 
 int proc_file_commands(char *file_path, int *exe_ret);
-#endif /* MAIN_H */
+#endif /* _MAIN_H_ */
