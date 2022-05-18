@@ -7,7 +7,7 @@ void exec_file_non_interactive(char **ar)
 {
 	int status, j = 0, exit_status = 0, env_last_state = 0;
 	int  cur_state = 0, cur_index = -2, add_case = 0;
-	size_t count = 0;
+	size_t count = 1;
 	char *cmd;
 	char *abs_path;
 	int index[1024];

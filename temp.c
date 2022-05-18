@@ -27,8 +27,7 @@ int cd_home(int *exit_status, int *env_last_state, int *index,
 				dprintf(STDERR_FILENO,
 						"%s: %lu: cd: can't cd to %s\n", ar, *count, valid_home);
 				free(old_pwd);
-				(*count)++;
-				*exit_status = -1;
+				*exit_status = 2;
 				return (2);
 			}
 			_setenv("OLDPWD", old_pwd, 1, env_last_state,
@@ -38,14 +37,12 @@ int cd_home(int *exit_status, int *env_last_state, int *index,
 					cur_state, cur_index, add_case);
 			free(pwd);
 			free(old_pwd);
-			(*count)++;
 			*exit_status = 0;
 			return (1);
 		}
 		dprintf(STDERR_FILENO, "%s: %lu: cd: can't cd to %s\n",
 				ar, *count, valid_home);
 		free(old_pwd);
-		(*count)++;
 		*exit_status = -1;
 		return (2);
 }
@@ -75,8 +72,7 @@ int cd_prev(int *exit_status, int *env_last_state, int *index,
 			dprintf(STDERR_FILENO, "%s: %lu: cd: can't cd to %s\n",
 					ar, *count, _getenv("OLDPWD"));
 			free(old_pwd);
-			(*count)++;
-			*exit_status = -1;
+			*exit_status = 2;
 			return (2);
 		}
 		_setenv("OLDPWD", old_pwd, 1, env_last_state, index,
@@ -87,7 +83,6 @@ int cd_prev(int *exit_status, int *env_last_state, int *index,
 		printf("%s\n", pwd);
 		free(pwd);
 		free(old_pwd);
-		(*count)++;
 		*exit_status = 0;
 		return (1);
 }
@@ -124,8 +119,7 @@ int cd(char **argv, int *exit_status, int *env_last_state, int *index,
 		dprintf(STDERR_FILENO, "%s: %lu: cd: can't cd to %s\n",
 				ar, *count, argv[1]);
 		free(old_pwd);
-		(*count)++;
-		*exit_status = -1;
+		*exit_status = 2;
 		return (2);
 	}
 	_setenv("OLDPWD", old_pwd, 1, env_last_state, index,
@@ -134,7 +128,6 @@ int cd(char **argv, int *exit_status, int *env_last_state, int *index,
 	_setenv("PWD", pwd, 1, env_last_state, index, cur_state, cur_index, add_case);
 	free(pwd);
 	free(old_pwd);
-	(*count)++;
 	*exit_status = 0;
 	return (1);
 }
@@ -199,7 +192,7 @@ int init_exec(size_t c, char *n, char **argv, int *exit_status,
 
 	if (argv[0] == NULL)
 	{
-		*exit_status = -1;
+		*exit_status = 0;
 		free_dblptr(argv, NULL);
 		return (2);
 	}
@@ -213,7 +206,7 @@ int init_exec(size_t c, char *n, char **argv, int *exit_status,
 	if (abs_path == NULL)
 	{
 		printf("%s: %lu: %s: not found\n", n, c, argv[0]);
-		*exit_status = -1;
+		*exit_status = 127;
 		free_dblptr(argv, NULL);
 		return (1);
 	}

@@ -21,11 +21,12 @@ int main(int __attribute__((unused)) argc, char **ar)
 		exec_file_non_interactive(ar);
 	while (1)
 	{
-		printf("$ ");
+		printf("($) ");
 		fflush(stdout);
 		cmd = _readline();
 		execute(ar[0], cmd, &status, &exit_status, &env_last_state,
 			&cur_state, &cur_index, &add_case, index, &count);
+
 	}
 
 	return (0);
@@ -57,7 +58,7 @@ void execute(char *ar, char *cmd, int *status, int *exit_status,
 		if (cmd == NULL)
 		{
 			free_environ_exit(env_last_state, index, add_case);
-			exit(-1);
+			exit(0);
 		}
 		commands = (char **)_strtok(cmd, commands, ";");
 		while (commands && commands[k])
@@ -82,8 +83,8 @@ void execute(char *ar, char *cmd, int *status, int *exit_status,
 					exec_parent(NULL, status, abs_path, argv, exit_status);
 			}
 			k++;
-			(*count)++;
 		}
+		(*count)++;
 		free_dblptr(commands, cmd);
 }
 /**
@@ -97,7 +98,7 @@ void execute(char *ar, char *cmd, int *status, int *exit_status,
 void exec_parent(char *cmd, int *st, char *a_path, char **av, int *ex_st)
 {
 	wait(st);
-	*ex_st = 0;
+	*ex_st = WEXITSTATUS(*st);
 	if (av[0][0] != '/')
 		free_ptr(a_path);
 	free_dblptr(av, cmd);

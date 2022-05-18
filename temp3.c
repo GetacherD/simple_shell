@@ -1,5 +1,30 @@
 #include "main.h"
 /**
+* __exit -exit process with some exit status
+* @commands: commands separated by semicolon or special char
+* @cmd: associated command pointer to free
+* @argv: argv to be freed
+* @env_last_state: enviromental variable change last state
+* @index: all index of env variables changed so far
+* @add_case: if any time new env var was add or not
+*/
+void __exit(char **commands, char *cmd, char **argv, int *env_last_state,
+		int *index, int *add_case)
+{
+	int stat;
+
+	if (argv[1])
+		stat = _atoi(argv[1]);
+	else
+		stat = 0;
+	free_dblptr(argv, NULL);
+	free_dblptr(commands, cmd);
+	free_environ_exit(env_last_state, index, add_case);
+	exit(stat);
+}
+
+
+/**
 * get_absolute_path -get absolute path give file name
 * @name: file name to be searched
 * Return: on success absolute path on fail  NULL
@@ -62,6 +87,7 @@ int call_setenv(char **argv, int *exit_status,
 		(*count)++;
 	}
 	*exit_status = 0;
+	(*count)++;
 	return (1);
 }
 /**
@@ -75,27 +101,23 @@ int echo(char **argv, int *exit_status, size_t *count)
 {
 	if ((_strcmp(argv[1], "$$") == 0))
 	{
-		printf("%u\n", getppid());
+		dprintf(STDOUT_FILENO, "%u\n", getppid());
 		*exit_status = 0;
 		(*count)++;
 		return (1);
 	}
 	if (_strcmp(argv[1], "$?") == 0)
 	{
-		printf("%d\n", *exit_status);
+		dprintf(STDOUT_FILENO, "%d\n", *exit_status);
 		*exit_status = 0;
 		(*count)++;
 		return (1);
 	}
 	if (_getenv(&(argv[1][1])))
-		printf("%s\n", _getenv(&(argv[1][1])));
+		dprintf(STDOUT_FILENO, "%s\n", _getenv(&(argv[1][1])));
 	else
-	{
-		printf("No env var\n");
-		*exit_status = 0;
-		(*count)++;
-	}
+		dprintf(STDOUT_FILENO, "%s: not found\n", _getenv(&(argv[1][1])));
+	*exit_status = 0;
+	(*count)++;
 	return (1);
 }
-
-

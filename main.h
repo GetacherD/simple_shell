@@ -77,6 +77,7 @@ void free_ptr(char *ptr);
 void free_dblptr(char **argv, char *cmd);
 int check_empty_space(char *s);
 void __exit(char **, char *, char **, int *, int *, int *);
+void __exit_semi(char **, char **, char *, char **, int *, int *, int *);
 /*
 * path functions
 */

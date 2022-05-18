@@ -2,14 +2,15 @@
 /**
 * __exit -exit process with some exit status
 * @commands: commands separated by semicolon or special char
+* @commands_semi: commands separated by semicolon or special char
 * @cmd: associated command pointer to free
 * @argv: argv to be freed
 * @env_last_state: enviromental variable change last state
 * @index: all index of env variables changed so far
 * @add_case: if any time new env var was add or not
 */
-void __exit(char **commands, char *cmd, char **argv, int *env_last_state,
-		int *index, int *add_case)
+void __exit_semi(char **commands_semi, char **commands, char *cmd, char **argv,
+	int *env_last_state, int *index, int *add_case)
 {
 	int stat;
 
@@ -19,6 +20,7 @@ void __exit(char **commands, char *cmd, char **argv, int *env_last_state,
 		stat = 0;
 	free_dblptr(argv, NULL);
 	free_dblptr(commands, cmd);
+	free_dblptr(commands_semi, NULL);
 	free_environ_exit(env_last_state, index, add_case);
 	exit(stat);
 }
