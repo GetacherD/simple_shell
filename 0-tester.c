@@ -11,6 +11,7 @@ int main(int __attribute__((unused)) argc, char **ar)
 	int  cur_state = 0, cur_index = -2, add_case = 0;
 	size_t count = 1;
 	char *cmd;
+	char prompt[] = {'$', ' '};
 	int index[1024];
 
 	for (j = 0; j < 1024; j++)
@@ -21,7 +22,7 @@ int main(int __attribute__((unused)) argc, char **ar)
 		exec_file_non_interactive(ar);
 	while (1)
 	{
-		printf("($) ");
+		write(STDOUT_FILENO, prompt, 2);
 		fflush(stdout);
 		cmd = _readline();
 		execute(ar[0], cmd, &status, &exit_status, &env_last_state,

@@ -20,8 +20,16 @@ void exec_file_non_interactive(char **ar)
 		abs_path = get_path_in_cwd(ar[1]);
 	if (access(abs_path, R_OK) != 0)
 	{
-		dprintf(STDOUT_FILENO, "%s: %lu: cannot open %s: No such file\n",
-							ar[0], count, ar[1]);
+		write(STDERR_FILENO, ar[0], _strlen(ar[0]));
+		_putchar(':');
+		_putchar(' ');
+		print_num((ssize_t)count);
+		_putchar(':');
+		_putchar(' ');
+		write(STDOUT_FILENO, "cannot open ", 12);
+		write(STDOUT_FILENO, ar[1], _strlen(ar[1]));
+		write(STDOUT_FILENO, " No such file", 13);
+		_putchar('\n');
 		if (ar[1][0] != '/')
 			free_ptr(abs_path);
 		exit(-1);

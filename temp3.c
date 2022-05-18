@@ -55,7 +55,7 @@ void print_env(char **env)
 
 	while (env[i])
 	{
-		printf("%s\n", environ[i]);
+		_printf("%s\n", environ[i]);
 		i++;
 	}
 }
@@ -75,19 +75,17 @@ void print_env(char **env)
 
 int call_setenv(char **argv, int *exit_status,
 	int *env_last_state, int *index, int *cur_state,
-	int *cur_index, int *add_case, size_t *count)
+	int *cur_index, int *add_case, __attribute__((unused))size_t *count)
 {
 	if (argv[1] && argv[2])
 		_setenv(argv[1], argv[2], 1, env_last_state,
 			index, cur_state, cur_index, add_case);
 	else
 	{
-		dprintf(STDERR_FILENO, "usage: setenv var value\n");
+		_printf("usage: setenv var value\n");
 		*exit_status = 0;
-		(*count)++;
 	}
 	*exit_status = 0;
-	(*count)++;
 	return (1);
 }
 /**
@@ -97,27 +95,24 @@ int call_setenv(char **argv, int *exit_status,
  * @count: set command count
  * Return: 1 always
  */
-int echo(char **argv, int *exit_status, size_t *count)
+int echo(char **argv, int *exit_status, __attribute__((unused))size_t *count)
 {
 	if ((_strcmp(argv[1], "$$") == 0))
 	{
-		dprintf(STDOUT_FILENO, "%u\n", getppid());
+		_printf("%d\n", getppid());
 		*exit_status = 0;
-		(*count)++;
 		return (1);
 	}
 	if (_strcmp(argv[1], "$?") == 0)
 	{
-		dprintf(STDOUT_FILENO, "%d\n", *exit_status);
+		_printf("%d\n", *exit_status);
 		*exit_status = 0;
-		(*count)++;
 		return (1);
 	}
 	if (_getenv(&(argv[1][1])))
-		dprintf(STDOUT_FILENO, "%s\n", _getenv(&(argv[1][1])));
+		_printf("%s\n", _getenv(&(argv[1][1])));
 	else
-		dprintf(STDOUT_FILENO, "%s: not found\n", _getenv(&(argv[1][1])));
+		_printf("%s: not found\n", _getenv(&(argv[1][1])));
 	*exit_status = 0;
-	(*count)++;
 	return (1);
 }

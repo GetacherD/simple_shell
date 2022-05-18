@@ -13,6 +13,7 @@ extern  char **environ;
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <fcntl.h>
+#include <stdarg.h>
 /**
  * struct filepath - filepath structure
  *
@@ -27,6 +28,20 @@ typedef struct filepath
 } filep;
 char *_readFromFile(char *file);
 void exec_file_non_interactive(char **ar);
+
+/*
+ * printf function
+ */
+int _putchar(char p);
+int print_n(const va_list ls);
+int _printf(const char *format, ...);
+int print_char(const va_list a);
+int print_string(const va_list b);
+int print_modulo(const va_list list);
+int num_digits(int n);
+void print_num(int n);
+int print_b(const va_list);
+int len(const char *s);
 
 /*
 *temporary

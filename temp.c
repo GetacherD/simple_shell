@@ -24,8 +24,7 @@ int cd_home(int *exit_status, int *env_last_state, int *index,
 			i = chdir(valid_home);
 			if (i == -1)
 			{
-				dprintf(STDERR_FILENO,
-						"%s: %lu: cd: can't cd to %s\n", ar, *count, valid_home);
+				_printf("%s: %d: cd: can't cd to %s\n", ar, (int)*count, valid_home);
 				free(old_pwd);
 				*exit_status = 2;
 				return (2);
@@ -40,8 +39,8 @@ int cd_home(int *exit_status, int *env_last_state, int *index,
 			*exit_status = 0;
 			return (1);
 		}
-		dprintf(STDERR_FILENO, "%s: %lu: cd: can't cd to %s\n",
-				ar, *count, valid_home);
+		_printf("%s: %d: cd: can't cd to %s\n",
+				ar, (int)*count, valid_home);
 		free(old_pwd);
 		*exit_status = -1;
 		return (2);
@@ -69,8 +68,8 @@ int cd_prev(int *exit_status, int *env_last_state, int *index,
 		i = chdir(_getenv("OLDPWD"));
 		if (i == -1)
 		{
-			dprintf(STDERR_FILENO, "%s: %lu: cd: can't cd to %s\n",
-					ar, *count, _getenv("OLDPWD"));
+			_printf("%s: %d: cd: can't cd to %s\n",
+					ar, (int)*count, _getenv("OLDPWD"));
 			free(old_pwd);
 			*exit_status = 2;
 			return (2);
@@ -80,7 +79,7 @@ int cd_prev(int *exit_status, int *env_last_state, int *index,
 		pwd = _getcwd();
 		_setenv("PWD", pwd, 1, env_last_state, index,
 				cur_state, cur_index, add_case);
-		printf("%s\n", pwd);
+		_printf("%s\n", pwd);
 		free(pwd);
 		free(old_pwd);
 		*exit_status = 0;
@@ -116,8 +115,8 @@ int cd(char **argv, int *exit_status, int *env_last_state, int *index,
 	i = chdir(argv[1]);
 	if (i == -1)
 	{
-		dprintf(STDERR_FILENO, "%s: %lu: cd: can't cd to %s\n",
-				ar, *count, argv[1]);
+		_printf("%s: %d: cd: can't cd to %s\n",
+				ar, (int)*count, argv[1]);
 		free(old_pwd);
 		*exit_status = 2;
 		return (2);
@@ -205,7 +204,7 @@ int init_exec(size_t c, char *n, char **argv, int *exit_status,
 	abs_path = get_absolute_path(argv[0]);
 	if (abs_path == NULL)
 	{
-		printf("%s: %lu: %s: not found\n", n, c, argv[0]);
+		_printf("%s: %d: %s: not found\n", n, c, argv[0]);
 		*exit_status = 127;
 		free_dblptr(argv, NULL);
 		return (1);

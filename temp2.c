@@ -31,19 +31,19 @@ void __exit_semi(char **commands_semi, char **commands, char *cmd, char **argv,
 * @count: number of commands performed till now -> pointer
 * Return: 1 always
 */
-int call_getenv(char **argv, int *exit_status, size_t *count)
+int call_getenv(char **argv, int *exit_status,
+		__attribute__((unused))size_t *count)
 {
 		if (argv[1])
 		{
 			if (_getenv(argv[1]))
-				printf("%s\n", _getenv(argv[1]));
+				_printf("%s\n", _getenv(argv[1]));
 			else
-				printf("(nill)\n");
+				_printf("(nill)\n");
 		}
 		else
-			printf("Usage: getenv varname\n");
+			_printf("Usage: getenv varname\n");
 		*exit_status = 0;
-		(*count)++;
 		return (1);
 }
 /**
@@ -52,11 +52,10 @@ int call_getenv(char **argv, int *exit_status, size_t *count)
 * @count: number of commands performed till now
 * Return: 1 always
 */
-int call_env(int *exit_status, size_t *count)
+int call_env(int *exit_status, __attribute__((unused))size_t *count)
 {
 		print_env(environ);
 		*exit_status = 0;
-		(*count)++;
 		return (1);
 }
 /**

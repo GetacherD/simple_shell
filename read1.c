@@ -29,7 +29,7 @@ char *_readline(void)
 	n = read(STDIN_FILENO, buf, 1024);
 	if (n == 0 || (n < 1024 && buf[n - 1] != '\n'))
 	{
-		printf("\n");
+		_printf("\n");
 		return (NULL);
 	}
 	size = size + n;
@@ -42,7 +42,7 @@ char *_readline(void)
 		n = read(STDIN_FILENO, buf, 5);
 		if ((n < 1024 && buf[n - 1] != '\n') || n == 0)
 		{
-			printf("\n");
+			_printf("\n");
 			free(cp);
 			return (NULL);
 		}
