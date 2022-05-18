@@ -14,6 +14,7 @@ extern  char **environ;
 #include <sys/types.h>
 #include <fcntl.h>
 #include <stdarg.h>
+#include <signal.h>
 /**
  * struct filepath - filepath structure
  *

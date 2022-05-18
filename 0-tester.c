@@ -1,5 +1,14 @@
 #include "main.h"
 /**
+ * callback - signal handler
+ * @sig: unused int
+ */
+
+void callback(int __attribute__((unused)) sig)
+{
+	write(STDOUT_FILENO, "\n$ ", 3);
+}
+/**
 * main - entry point to program
 * @argc: arg counts
 * @ar: argument vectors
@@ -14,6 +23,7 @@ int main(int __attribute__((unused)) argc, char **ar)
 	char prompt[] = {'$', ' '};
 	int index[1024];
 
+	signal(SIGINT, callback);
 	for (j = 0; j < 1024; j++)
 		index[j] = -1;
 	if (!isatty(fileno(stdin)))
