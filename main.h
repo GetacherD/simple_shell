@@ -1,164 +1,151 @@
-#ifndef _MAIN_H_
-#define _MAIN_H_
+#ifndef MAIN_H
 
+#define MAIN_H
+
+extern  char **environ;
+/*
+* required libraries to be included
+*/
 #include <stdio.h>
 #include <stdlib.h>
-#include <signal.h>
-#include <fcntl.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <sys/wait.h>
 #include <unistd.h>
-#include <errno.h>
-
-#define END_OF_FILE -2
-#define EXIT -3
-
-/* Global environemnt */
-extern char **environ;
-/* Global program name */
-char *name;
-/* Global history counter */
-int hist;
-
+#include <sys/wait.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <fcntl.h>
+#include <stdarg.h>
+#include <signal.h>
 /**
- * struct list_s - A new struct type defining a linked list.
- * @dir: A directory path.
- * @next: A pointer to another struct list_s.
- */
-typedef struct list_s
+ * struct filepath - filepath structure
+ *
+ * @path: path to file
+ * @next: pointer to next file
+ *
+*/
+typedef struct filepath
 {
-	char *dir;
-	struct list_s *next;
-} list_t;
+	char *path;
+	struct filepath *next;
+} filep;
+char *_readFromFile(char *file);
+void exec_file_non_interactive(char **ar);
 
-/**
- * struct builtin_s - A new struct type defining builtin commands.
- * @name: The name of the builtin command.
- * @f: A function pointer to the builtin command's function.
+/*
+ * printf function
  */
-typedef struct builtin_s
-{
-	char *name;
-	int (*f)(char **argv, char **front);
-} builtin_t;
+int _putchar(char p);
+int print_n(const va_list ls);
+int _printf(const char *format, ...);
+int print_char(const va_list a);
+int print_string(const va_list b);
+int print_modulo(const va_list list);
+int num_digits(int n);
+void print_num(int n);
+int print_b(const va_list);
+int len(const char *s);
+char *readline(int  *status, ssize_t *len);
 
-/**
- * struct alias_s - A new struct defining aliases.
- * @name: The name of the alias.
- * @value: The value of the alias.
- * @next: A pointer to another struct alias_s.
- */
-typedef struct alias_s
-{
-	char *name;
-	char *value;
-	struct alias_s *next;
-} alias_t;
+/*
+*temporary
+*/
+int echo(char **argv, int *exit_status, size_t *count);
 
-/* Global aliases linked list */
-alias_t *aliases;
+int call_setenv(char **argv, int *exit_status,
+	int *env_last_state, int *index, int *cur_state,
+	int *cur_index, int *add_case, size_t *count);
 
-/* Main Helpers */
-ssize_t _getline(char **lineptr, size_t *n, FILE *stream);
-void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size);
-char **_strtok(char *line, char *delim);
-char *get_location(char *command);
-list_t *get_path_dir(char *path);
-int execute(char **args, char **front);
-void free_list(list_t *head);
-char *_itoa(int num);
+void execute(int *, ssize_t *, char *ar, char *cmd, int *status, int *exit_status,
+	int *env_last_state, int *cur_state, int *cur_index,
+	int *add_case, int *index, size_t *count);
+void execute_non(char *ar, char *cmd, int *status, int *exit_status,
+	int *env_last_state, int *cur_state, int *cur_index,
+	int *add_case, int *index, size_t *count);
+int call_env(int *exit_status, size_t *count);
+int call_getenv(char **argv, int *exit_status, size_t *count);
+int cd_prev(int *exit_status, int *env_last_state, int *index,
+	int *cur_state, int *cur_index, int *add_case, size_t *count, char *ar);
+int cd_home(int *exit_status, int *env_last_state, int *index,
+	int *cur_state, int *cur_index, int *add_case, size_t *count, char *ar);
+void free_environ_exit(int *env_last_state, int *index, int *add_case);
+void free_environ(char **old_env, int *env_last_state,
+	int *index, int cur_state, int cur_index);
+int init_exec(size_t, char *, char **argv, int *exit_status,
+	int *env_last_state, int *index, int *, int *, int *, size_t *, char *);
+int exec_builtin(char **argv, int *exit_status,
+	int *env_last_state, int *index, int *, int *, int *, size_t *, char *);
+int cd(char **argv, int *exit_status, int *env_last_state,
+	int *index, int *, int *, int *, size_t *, char *);
+char *get_absolute_path(char *name);
+/*
+*malloc free functions
+*/
+void free_all(char **argv, char *p_cwd, char *p_path, char *p_abs);
 
-/* Input Helpers */
-void handle_line(char **line, ssize_t read);
-void variable_replacement(char **args, int *exe_ret);
-char *get_args(char *line, int *exe_ret);
-int call_args(char **args, char **front, int *exe_ret);
-int run_args(char **args, char **front, int *exe_ret);
-int handle_args(int *exe_ret);
-int check_args(char **args);
-void free_args(char **args, char **front);
-char **replace_aliases(char **args);
+/*
+* maths operations
+*/
+size_t _power(size_t, size_t);
+size_t _atoi(char *);
+/*
+*utility 2
+*/
+void exec_parent(char *, int *, char *, char **, int *);
+void free_ptr(char *ptr);
+void free_dblptr(char **argv, char *cmd);
+int check_empty_space(char *s);
+void __exit(char **, char *, char **, int *, int *, int *);
+void __exit_semi(char **, char **, char *, char **, int *, int *, int *);
+/*
+* path functions
+*/
+char *_getcwd();
+char *check_in_cwd(char *filename);
+char *check_in_path(char *filename);
+char *get_full_path(char *filename, char *homedir);
+char *get_path_in_cwd(char *filename);
+/*
+* linked list functions
+*/
 
-/* String functions */
-int _strlen(const char *s);
-char *_strcat(char *dest, const char *src);
-char *_strncat(char *dest, const char *src, size_t n);
-char *_strcpy(char *dest, const char *src);
-char *_strchr(char *s, char c);
-int _strspn(char *s, char *accept);
-int _strcmp(char *s1, char *s2);
-int _strncmp(const char *s1, const char *s2, size_t n);
+filep *gethead();
+void free_list(filep *head);
+int set_next(char *p, size_t i, filep  *current);
+/*
+* string functions
+*/
+size_t _strlen(const char *s);
+char *_strtok(char *s, char **p, char *sep);
+int _strcmp(char *src, char *dest);
+int _strcpy(char *src, char *dest);
+size_t len_words(char **s);
+int _memset(char *mem, size_t size);
+size_t len_from_to(char *p, int start, char stop);
+int _strcmp_index(char *src, char *dest);
+void _strcpy_index(char *src, char *dest, size_t start_index);
+/*
+* environmental var functions
+*/
 
-/* Builtins */
-int (*get_builtin(char *command))(char **args, char **front);
-int shellby_exit(char **args, char **front);
-int shellby_env(char **args, char __attribute__((__unused__)) **front);
-int shellby_setenv(char **args, char __attribute__((__unused__)) **front);
-int shellby_unsetenv(char **args, char __attribute__((__unused__)) **front);
-int shellby_cd(char **args, char __attribute__((__unused__)) **front);
-int shellby_alias(char **args, char __attribute__((__unused__)) **front);
-int shellby_help(char **args, char __attribute__((__unused__)) **front);
+int  _setenv(const char *name, const char *value, int overwrite,
+	int *, int *, int *, int *, int *);
+int _unsetenv(const char *name, int *env_last_state, int *index);
+int  _addenv(const char *name, const char *value, int *,
+	int *, int *, int *, int *);
+char *_getenv(const char *name);
+int  _getindex(const char *name);
+char *getenv_index(char *name);
+int free_null_env(char **newenv, ssize_t i);
+void print_env(char **env);
+/*
+* getline functions
+*/
 
-/* Builtin Helpers */
-char **_copyenv(void);
-void free_env(void);
-char **_getenv(const char *var);
-
-/* Error Handling */
-int create_error(char **args, int err);
-char *error_env(char **args);
-char *error_1(char **args);
-char *error_2_exit(char **args);
-char *error_2_cd(char **args);
-char *error_2_syntax(char **args);
-char *error_126(char **args);
-char *error_127(char **args);
-
-/* Linkedlist Helpers */
-alias_t *add_alias_end(alias_t **head, char *name, char *value);
-void free_alias_list(alias_t *head);
-list_t *add_node_end(list_t **head, char *dir);
-void free_list(list_t *head);
-
-void help_all(void);
-void help_alias(void);
-void help_cd(void);
-void help_exit(void);
-void help_help(void);
-void help_env(void);
-void help_setenv(void);
-void help_unsetenv(void);
-void help_history(void);
-int shellby_alias(char **args, char __attribute__((__unused__)) **front);
-void set_alias(char *var_name, char *value);
-void print_alias(alias_t *alias);
-int token_len(char *str, char *delim);
-int count_tokens(char *str, char *delim);
-char **_strtok(char *line, char *delim);
-char **_copyenv(void);
-void free_env(void);
-char **_getenv(const char *var);
-int num_len(int num);
-int create_error(char **args, int err);
-int cant_open(char *file_path);
-int proc_file_commands(char *file_path, int *exe_ret);
-void assign_lineptr(char **lineptr, size_t *n, char *buffer, size_t b);
-char *get_pid(void);
-char *get_env_value(char *beginning, int len);
-void handle_line(char **line, ssize_t read);
-ssize_t get_new_len(char *line);
-void logical_ops(char *line, ssize_t *new_len);
-char *fill_path_dir(char *path);
-list_t *get_path_dir(char *path);
-void sig_handler(int sig);
-int execute(char **args, char **front);
-
-
-
-
-
-
-
-int proc_file_commands(char *file_path, int *exe_ret);
-#endif /* _MAIN_H_ */
+char *_readline();
+char *_interline();
+/*
+* built in functions
+*/
+char *get_abs_path(char **argv, char *path_cwd, char *path_in_path);
+int is_builtin(char *argv1, char *argv2);
+void exec_non_interactive(char **ar);
+#endif
